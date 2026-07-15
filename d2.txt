@@ -1,0 +1,83 @@
+TemPlate_CoreSW:
+config t
+vlan 5
+ name accenturecubao41.com
+ exit
+Int vlan 5
+ no shut
+ ip add 10.0.16.1 255.255.240.0
+   ip ospf 1 area 0
+ip dhcp excluded-add 10.0.16.1 10.0.16.249
+ip dhcp pool accenturecubao41.com
+ network 10.0.16.0 255.255.240.0
+ default-router 10.0.16.1
+ domain-name accenturecubao41.com
+ dns-server 10.41.1.10
+ option 150 ip 10.41.100.8
+ Int Fa 0/5
+  swi Voice vlan 5
+  do sh ip dhcp binding
+  
+  
+  
+  !@taas
+conf t 
+	int fa0/9
+	 no sw
+	 ip add 10.200.20.30 255.255.255.224
+	 end
+	 
+!@baba
+conf t 
+	int fa0/9
+	 no sw
+	 ip add 10.200.20.35 255.255.255.224
+	 end
+	 
+	 
+!@R1
+conf t
+	no ip route 10.1.1.5 255.255.255.255 10.1.1.2
+	ip route 10.1.1.4 255.255.255.252 10.1.1.2
+	end
+	
+	
+!@R3
+conf t
+	ip route 10.1.1.8 255.255.255.252 10.1.1.2
+	end
+	
+		!@R4
+conf t
+	ip route 10.1.1.0 255.255.255.252 10.1.1.9	
+	end
+
+
+!@R2
+conf t
+	ip route 10.1.1.8 255.255.255.252 10.1.1.6
+	
+	end
+	
+	!@R3
+	conf t
+	ip route 10.1.1.0 255.255.255.252 10.1.1.1
+	
+	end
+	
+	
+	!@C1
+conf t
+  router ospf 1
+	network 10.2.1.0 0.0.0.255 area 0
+	network 10.2.2.0 0.0.0.255 area 0
+	network 192.168.1.128 0.0.0.31 area 0
+	network 10.1.4.8 0.0.0.3 area 0
+	end
+	
+		!@R4
+conf t
+  router ospf 1
+	network 10.1.4.4 0.0.0.3 area 0
+	network 10.1.4.8 0.0.0.3 area 0
+	end
